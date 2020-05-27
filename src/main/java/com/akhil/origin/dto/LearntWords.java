@@ -1,4 +1,4 @@
-package com.akhil.origin.entity;
+package com.akhil.origin.dto;
 
 import lombok.Data;
 
@@ -8,4 +8,6 @@ import java.util.List;
 public class LearntWords {
 
     private List<Integer> ids;
+
+    private String email;
 }

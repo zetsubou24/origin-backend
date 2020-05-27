@@ -1,6 +1,9 @@
 package com.akhil.origin.controller;
 
-import com.akhil.origin.entity.LearntWords;
+import com.akhil.origin.dto.Answer;
+import com.akhil.origin.dto.Email;
+import com.akhil.origin.dto.LearntWords;
+import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.User;
 import com.akhil.origin.entity.Word;
 import com.akhil.origin.service.UserService;
@@ -25,14 +28,36 @@ public class WordController {
         return userService.getUsers();
     }
 
-    @GetMapping("/words")
-    public List<Word> getWords(){
-        return wordService.getWords();
+    @PostMapping("/lesson")
+    public List<Word> getLesson(@RequestBody Email email){
+        System.out.println(email.getEmail());
+        return wordService.getLesson(email);
     }
 
-    @PostMapping("/learnt")
-    public void learntWords(@RequestBody LearntWords learntWords){
+    @PostMapping("/quiz")
+    public List<Word> getQuiz(@RequestBody Email email){
+        System.out.println(email.getEmail());
+        return wordService.getQuiz(email);
+    }
+
+    @GetMapping("/meanings")
+    public List<String> getMeanings(@RequestParam int id){
+        return wordService.getMeanings(id);
+    }
+
+    @PostMapping("/lesson/submit")
+    public String learntWords(@RequestBody LearntWords learntWords){
         System.out.println(learntWords);
-        wordService.learntWords();
+        System.out.println(learntWords.getEmail());
+        wordService.learntWords(learntWords);
+        return learntWords.toString();
+    }
+
+    @PostMapping("/quiz/submit")
+    public String submitQuiz(@RequestBody Submission submission){
+        System.out.println(submission);
+        System.out.println(submission.getEmail());
+        wordService.solvedWords(submission);
+        return submission.getAnswers().toString();
     }
 }

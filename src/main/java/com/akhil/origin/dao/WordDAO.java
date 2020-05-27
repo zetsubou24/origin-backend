@@ -8,4 +8,7 @@ public interface WordDAO {
     public List<Word> getWords();
 
     void learntWords();
+
+    List<String> getMeanings();
+
 }

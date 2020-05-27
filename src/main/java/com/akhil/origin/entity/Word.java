@@ -1,5 +1,6 @@
 package com.akhil.origin.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,5 +19,6 @@ public class Word {
     private String wordMeaning;
 
     @OneToMany(mappedBy = "word")
+    @JsonIgnore
     private Set<Status> status = new HashSet<>();
 }

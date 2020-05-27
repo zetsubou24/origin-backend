@@ -24,7 +24,7 @@ public class WordDAOImpl implements WordDAO{
     public List<Word> getWords() {
         Session currentSession = entityManager.unwrap(Session.class);
 
-        Query<Word> query = currentSession.createQuery("from Word order by rand()", Word.class).setMaxResults(10);
+        Query<Word> query = currentSession.createQuery("from Word order by rand()", Word.class).setMaxResults(3);
 
         List<Word> words = query.getResultList();
 
@@ -38,7 +38,18 @@ public class WordDAOImpl implements WordDAO{
         Status status = new Status();
         status.setUser(currentSession.get(User.class, 1));
         status.setWord(currentSession.get(Word.class, 1));
-        status.setLearnt(false);
+        status.setSolved(false);
         currentSession.save(status);
+    }
+
+    @Override
+    public List<String> getMeanings() {
+        Session currentSession = entityManager.unwrap(Session.class);
+
+        Query<Word> query = currentSession.createQuery("from Word ", Word.class).setMaxResults(3);
+
+        List<Word> words = query.getResultList();
+
+        return null;
     }
 }

@@ -9,9 +9,10 @@ import javax.persistence.*;
 @Data
 public class Status {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int status_id;
 
-    private boolean learnt;
+    private boolean solved;
 
     @ManyToOne()
     @JoinColumn(name="user_id")
