@@ -1,7 +1,6 @@
 package com.akhil.origin.controller;
 
-import com.akhil.origin.dto.Answer;
-import com.akhil.origin.dto.Email;
+import com.akhil.origin.dto.UserInfo;
 import com.akhil.origin.dto.LearntWords;
 import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.User;
@@ -29,15 +28,15 @@ public class WordController {
     }
 
     @PostMapping("/lesson")
-    public List<Word> getLesson(@RequestBody Email email){
-        System.out.println(email.getEmail());
-        return wordService.getLesson(email);
+    public List<Word> getLesson(@RequestBody UserInfo userInfo){
+        System.out.println(userInfo.getEmail());
+        return wordService.getLesson(userInfo);
     }
 
     @PostMapping("/quiz")
-    public List<Word> getQuiz(@RequestBody Email email){
-        System.out.println(email.getEmail());
-        return wordService.getQuiz(email);
+    public List<Word> getQuiz(@RequestBody UserInfo userInfo){
+        System.out.println(userInfo.getEmail());
+        return wordService.getQuiz(userInfo);
     }
 
     @GetMapping("/meanings")

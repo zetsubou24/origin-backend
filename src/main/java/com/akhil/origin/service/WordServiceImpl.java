@@ -5,7 +5,7 @@ import com.akhil.origin.dao.UserRepository;
 import com.akhil.origin.dao.WordDAO;
 import com.akhil.origin.dao.WordRepository;
 import com.akhil.origin.dto.Answer;
-import com.akhil.origin.dto.Email;
+import com.akhil.origin.dto.UserInfo;
 import com.akhil.origin.dto.LearntWords;
 import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.Status;
@@ -18,10 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class WordServiceImpl implements WordService{
-
-    @Autowired
-    private WordDAO wordDAO;
 
     @Autowired
     private WordRepository wordRepository;
@@ -33,8 +31,14 @@ public class WordServiceImpl implements WordService{
     private UserRepository userRepository;
 
     @Override
-    public List<Word> getLesson(Email email) {
-        User user = userRepository.findByUserEmail(email.getEmail());
+    public List<Word> getLesson(UserInfo userInfo) {
+        User user = userRepository.findByUserEmail(userInfo.getEmail());
+        if(user == null){
+            user = new User();
+            user.setUserEmail(userInfo.getEmail());
+            user.setUserName(userInfo.getName());
+            userRepository.save(user);
+        }
         return wordRepository.getLesson(user.getUserId());
     }
 
@@ -55,8 +59,14 @@ public class WordServiceImpl implements WordService{
     }
 
     @Override
-    public List<Word> getQuiz(Email email) {
-        User user = userRepository.findByUserEmail(email.getEmail());
+    public List<Word> getQuiz(UserInfo userInfo) {
+        User user = userRepository.findByUserEmail(userInfo.getEmail());
+        if(user == null){
+            user = new User();
+            user.setUserEmail(userInfo.getEmail());
+            user.setUserName(userInfo.getName());
+            userRepository.save(user);
+        }
         return wordRepository.getQuiz(user.getUserId());
     }
 
