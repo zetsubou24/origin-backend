@@ -4,6 +4,7 @@ import com.akhil.origin.dto.UserInfo;
 import com.akhil.origin.dto.LearntWords;
 import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.Word;
+import com.akhil.origin.exception.UserNotFoundException;
 
 import java.util.List;
 
@@ -12,9 +13,9 @@ public interface WordService {
 
     List<String> getMeanings(int id);
 
-    void learntWords(LearntWords learntWords);
+    void learntWords(LearntWords learntWords) throws UserNotFoundException;
 
     List<Word> getQuiz(UserInfo userInfo);
 
-    void solvedWords(Submission submission);
+    void solvedWords(Submission submission) throws UserNotFoundException;
 }

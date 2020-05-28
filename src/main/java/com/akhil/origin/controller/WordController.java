@@ -5,10 +5,13 @@ import com.akhil.origin.dto.LearntWords;
 import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.User;
 import com.akhil.origin.entity.Word;
-import com.akhil.origin.service.UserService;
+import com.akhil.origin.exception.UserNotFoundException;
 import com.akhil.origin.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,15 +20,7 @@ import java.util.List;
 public class WordController {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private WordService wordService;
-
-    @GetMapping("/users")
-    public List<User> getUsers(){
-        return userService.getUsers();
-    }
 
     @PostMapping("/lesson")
     public List<Word> getLesson(@RequestBody UserInfo userInfo){
@@ -45,18 +40,32 @@ public class WordController {
     }
 
     @PostMapping("/lesson/submit")
-    public String learntWords(@RequestBody LearntWords learntWords){
+    public ResponseEntity<LearntWords> learntWords(@RequestBody LearntWords learntWords){
         System.out.println(learntWords);
         System.out.println(learntWords.getEmail());
-        wordService.learntWords(learntWords);
-        return learntWords.toString();
+        try {
+            wordService.learntWords(learntWords);
+        }
+        catch(UserNotFoundException exception){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,"User Not Found", exception
+            );
+        }
+        return new ResponseEntity<LearntWords>(learntWords,HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/quiz/submit")
     public String submitQuiz(@RequestBody Submission submission){
         System.out.println(submission);
         System.out.println(submission.getEmail());
-        wordService.solvedWords(submission);
-        return submission.getAnswers().toString();
+        try {
+            wordService.solvedWords(submission);
+            return submission.getAnswers().toString();
+        }
+        catch(UserNotFoundException exception){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,"User Not Found", exception
+            );
+        }
     }
 }

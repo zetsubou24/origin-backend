@@ -1,9 +1,9 @@
 package com.akhil.origin.service;
 
-import com.akhil.origin.dao.StatusRepository;
-import com.akhil.origin.dao.UserRepository;
-import com.akhil.origin.dao.WordDAO;
-import com.akhil.origin.dao.WordRepository;
+import com.akhil.origin.exception.UserNotFoundException;
+import com.akhil.origin.repository.StatusRepository;
+import com.akhil.origin.repository.UserRepository;
+import com.akhil.origin.repository.WordRepository;
 import com.akhil.origin.dto.Answer;
 import com.akhil.origin.dto.UserInfo;
 import com.akhil.origin.dto.LearntWords;
@@ -48,7 +48,9 @@ public class WordServiceImpl implements WordService{
     }
 
     @Override
-    public void learntWords(LearntWords learntWords) {
+    public void learntWords(LearntWords learntWords) throws UserNotFoundException{
+        User user = userRepository.findByUserEmail(learntWords.getEmail());
+        if(user == null) throw new UserNotFoundException("User Not Found");
         for(int id : learntWords.getIds()){
             Status status = new Status();
             status.setUser(userRepository.findByUserEmail(learntWords.getEmail()));
@@ -72,12 +74,13 @@ public class WordServiceImpl implements WordService{
 
     @Override
     @Transactional
-    public void solvedWords(Submission submission) {
-        for(Answer answer: submission.getAnswers()){
-            if(answer.isCorrect()) {
-                User user = userRepository.findByUserEmail(submission.getEmail());
-                statusRepository.setSolved(user.getUserId(), answer.getId());
+    public void solvedWords(Submission submission) throws UserNotFoundException {
+            User user = userRepository.findByUserEmail(submission.getEmail());
+            if(user == null) throw new UserNotFoundException("User Not Found");
+            for (Answer answer : submission.getAnswers()) {
+                if (answer.isCorrect()) {
+                    statusRepository.setSolved(user.getUserId(), answer.getId());
+                }
             }
-        }
     }
 }

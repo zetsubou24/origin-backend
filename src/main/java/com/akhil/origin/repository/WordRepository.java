@@ -1,4 +1,4 @@
-package com.akhil.origin.dao;
+package com.akhil.origin.repository;
 
 import com.akhil.origin.entity.Word;
 import org.springframework.data.jpa.repository.Query;
