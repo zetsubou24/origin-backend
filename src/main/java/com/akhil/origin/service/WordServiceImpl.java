@@ -1,6 +1,7 @@
 package com.akhil.origin.service;
 
 import com.akhil.origin.exception.UserNotFoundException;
+import com.akhil.origin.exception.WordNotFoundException;
 import com.akhil.origin.repository.StatusRepository;
 import com.akhil.origin.repository.UserRepository;
 import com.akhil.origin.repository.WordRepository;
@@ -43,7 +44,8 @@ public class WordServiceImpl implements WordService{
     }
 
     @Override
-    public List<String> getMeanings(int id) {
+    public List<String> getMeanings(int id) throws WordNotFoundException {
+        if(!wordRepository.existsById(id)) throw new WordNotFoundException("Word Not Found");
         return wordRepository.getMeanings(id);
     }
 
@@ -82,5 +84,10 @@ public class WordServiceImpl implements WordService{
                     statusRepository.setSolved(user.getUserId(), answer.getId());
                 }
             }
+    }
+
+    @Override
+    public Word getWord(int id) {
+        return wordRepository.findById(id);
     }
 }

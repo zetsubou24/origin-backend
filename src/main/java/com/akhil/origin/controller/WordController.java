@@ -6,6 +6,7 @@ import com.akhil.origin.dto.Submission;
 import com.akhil.origin.entity.User;
 import com.akhil.origin.entity.Word;
 import com.akhil.origin.exception.UserNotFoundException;
+import com.akhil.origin.exception.WordNotFoundException;
 import com.akhil.origin.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,11 @@ public class WordController {
     @Autowired
     private WordService wordService;
 
+    @GetMapping("/word")
+    public Word getWord(@RequestParam int id){
+        return wordService.getWord(id);
+    }
+
     @PostMapping("/lesson")
     public List<Word> getLesson(@RequestBody UserInfo userInfo){
         System.out.println(userInfo.getEmail());
@@ -36,7 +42,14 @@ public class WordController {
 
     @GetMapping("/meanings")
     public List<String> getMeanings(@RequestParam int id){
-        return wordService.getMeanings(id);
+        try {
+            return wordService.getMeanings(id);
+        }
+        catch(WordNotFoundException wordNotFoundException){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,"Word Not Found", wordNotFoundException
+            );
+        }
     }
 
     @PostMapping("/lesson/submit")
